@@ -10,6 +10,7 @@ ObjectTracking::ObjectTracking() :
 {
 	image_sub_ = it_.subscribe("/ps3_eye/image_raw", 1, &ObjectTracking::ImageCallback, this);
 	target_sub_ = nh_.subscribe("/SelectTargetPerFoRo", 1, &ObjectTracking::SelectTargetCallback, this);
+	mode_sub_ = nh_.subscribe("/ModePerFoRo", 1, &ObjectTracking::ModeCallback, this);
 	image_pub_ = it_.advertise("/object_tracking/image_raw", 1);
 	navigate_pub_ = nh_.advertise<PerFoRoControl::NavigatePerFoRo>("/NavigatePerFoRo", 1);
 
@@ -97,6 +98,11 @@ void ObjectTracking::SelectTargetCallback(const PerFoRoControl::SelectTarget msg
 	mUpperBound.val[3] = 255;
 }
 
+void ObjectTracking::ModeCallback(const PerFoRoControl::MODE msg)
+{
+	PerFoRoMode = msg.MODE;
+}
+
 void ObjectTracking::ImageCallback(const sensor_msgs::ImageConstPtr& msg)
 {
 	cv_bridge::CvImagePtr cv_ptr;
@@ -129,7 +135,7 @@ void ObjectTracking::ImageCallback(const sensor_msgs::ImageConstPtr& msg)
 		//Initial stage, before selecting object. Do nothing. Camera view shown as is.
 	} else if (trackObject == 0)	{
 		rectangle(frame, Point(selection.x,selection.y),Point(selection.x+selection.width,selection.y+selection.height),Scalar(0,0,255),1);
-	} else	{
+	} else if (PerFoRoMode == 3)	{
 		Mat imgHSV, imgThresh, binFrame;
 		int contSize;
 

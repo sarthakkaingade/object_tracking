@@ -9,6 +9,7 @@
 #include <opencv2/video/tracking.hpp>
 #include <PerFoRoControl/SelectTarget.h>
 #include <PerFoRoControl/NavigatePerFoRo.h>
+#include <PerFoRoControl/MODE.h>
 
 using namespace cv;
 using namespace std;
@@ -38,6 +39,7 @@ protected:
 	image_transport::Subscriber image_sub_;
 	image_transport::Publisher image_pub_;
 	ros::Subscriber target_sub_;
+	ros::Subscriber mode_sub_;
 	ros::Publisher navigate_pub_;
 
 	Mat frame;
@@ -59,11 +61,12 @@ protected:
 	KalmanFilter KF;
 	Point kalmanEstimatePt;
 	bool selectObject;
-	int navX, navY, prevmsg = 1;
+	int navX, navY, prevmsg = 1, PerFoRoMode = 0;
 
 	void 	drawArrow(Mat image, Point p, Point q, Scalar color, int arrowMagnitude, int thickness, int line_type, int shift);
 	void	ImageCallback(const sensor_msgs::ImageConstPtr& msg);
 	void 	SelectTargetCallback(const PerFoRoControl::SelectTarget msg);
+	void 	ModeCallback(const PerFoRoControl::MODE msg);
 	void	initTracker();
 	void	navigate(int x, int y, int rows, int cols);
 	Point	kalmanTracker(Point centroid);
