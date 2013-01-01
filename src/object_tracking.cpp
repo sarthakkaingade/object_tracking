@@ -269,11 +269,11 @@ void ObjectTracking::navigate(int x, int y, int rows, int cols)
 {
 	PerFoRoControl::NavigatePerFoRo msg;
 	if (x < (0.3 * cols))	{
-		//cout<<"Turn Right"<<endl;
-		msg.command = 4;
-	} else if (x > (0.7 * cols))	{
 		//cout<<"Turn Left"<<endl;
 		msg.command = 3;
+	} else if (x > (0.7 * cols))	{
+		//cout<<"Turn Right"<<endl;
+		msg.command = 4;
 	} else	{
 		//cout<<"Center"<<endl;
 		msg.command = 0;
