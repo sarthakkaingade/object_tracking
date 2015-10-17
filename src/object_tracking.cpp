@@ -9,7 +9,7 @@ ObjectTracking::ObjectTracking() :
 	KF(6, 2, 0)
 {
 	image_sub_ = it_.subscribe("/ps3_eye/image_raw", 1, &ObjectTracking::ImageCallback, this);
-	image_pub_ = it_.advertise("/object_image", 1);
+	image_pub_ = it_.advertise("/object_tracking/image_raw", 1);
 
 	structure_elem = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5));
 	maxDistance = 320 + 240;
@@ -213,7 +213,7 @@ void ObjectTracking::ImageCallback(const sensor_msgs::ImageConstPtr& msg)
 	//cv::waitKey(3);
 
 	// Output modified video stream
-	//image_pub_.publish(cv_ptr->toImageMsg());
+	image_pub_.publish(cv_ptr->toImageMsg());
 }
 
    
