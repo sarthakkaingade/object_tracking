@@ -9,6 +9,7 @@ ObjectTracking::ObjectTracking() :
 	KF(6, 2, 0)
 {
 	image_sub_ = it_.subscribe("/ps3_eye/image_raw", 1, &ObjectTracking::ImageCallback, this);
+	target_sub_ = nh_.subscribe("/SelectTargetPerFoRo", 1, &ObjectTracking::SelectTargetCallback, this);
 	image_pub_ = it_.advertise("/object_tracking/image_raw", 1);
 
 	structure_elem = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5));
@@ -47,6 +48,51 @@ void ObjectTracking::drawArrow(Mat image, Point p, Point q, Scalar color, int ar
 	p.y = (int) ( q.y +  arrowMagnitude * sin(angle - PI/4));
 	//Draw the second segment
 	line(image, p, q, color, thickness, line_type, shift);
+}
+
+void ObjectTracking::SelectTargetCallback(const PerFoRoControl::SelectTarget msg)
+{
+	Mat clickFrame = frame;
+	Mat roiHSV;
+	selection.x = msg.x;
+	selection.y = msg.y;
+	selection.width = msg.width;
+	selection.height = msg.height;
+
+	if( selection.width > 0 && selection.height > 0 )
+		trackObject = 1;
+
+	selectCenter.x = (int)(selection.x + selection.width/2);
+	selectCenter.y = (int)(selection.y + selection.height/2);
+
+	selectCentroid = selectCenter;
+
+	//defines roi
+	cv::Rect roi( selection.x, selection.y, selection.width, selection.height );
+
+	//copies input image in roi
+	cv::Mat image_roi = clickFrame(roi);
+
+	cvtColor(image_roi, roiHSV, CV_BGR2HSV);
+
+	//computes mean over roi
+	cv::Scalar hsvColor = cv::mean( roiHSV );
+	cout<<"hsv"<<hsvColor<<endl;
+
+	double minH = (hsvColor.val[0] >= mColorRadius.val[0]) ? hsvColor.val[0]-mColorRadius.val[0] : 0;
+	double maxH = (hsvColor.val[0]+mColorRadius.val[0] <= 179) ? hsvColor.val[0]+mColorRadius.val[0] : 179;
+
+	mLowerBound.val[0] = minH;
+	mUpperBound.val[0] = maxH;
+
+	mLowerBound.val[1] = hsvColor.val[1] - mColorRadius.val[1];
+	mUpperBound.val[1] = hsvColor.val[1] + mColorRadius.val[1];
+
+	mLowerBound.val[2] = hsvColor.val[2] - mColorRadius.val[2];
+	mUpperBound.val[2] = hsvColor.val[2] + mColorRadius.val[2];
+
+	mLowerBound.val[3] = 0;
+	mUpperBound.val[3] = 255;
 }
 
 void ObjectTracking::ImageCallback(const sensor_msgs::ImageConstPtr& msg)

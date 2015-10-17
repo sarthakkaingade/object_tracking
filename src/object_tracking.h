@@ -7,6 +7,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/video/tracking.hpp>
+#include <PerFoRoControl/SelectTarget.h>
 
 using namespace cv;
 using namespace std;
@@ -35,6 +36,7 @@ protected:
 	image_transport::ImageTransport it_;
 	image_transport::Subscriber image_sub_;
 	image_transport::Publisher image_pub_;
+	ros::Subscriber target_sub_;
 
 	Mat frame;
 	float maxDistance, distPrevCurrent;
@@ -59,6 +61,7 @@ protected:
 
 	void 	drawArrow(Mat image, Point p, Point q, Scalar color, int arrowMagnitude, int thickness, int line_type, int shift);
 	void	ImageCallback(const sensor_msgs::ImageConstPtr& msg);
+	void 	SelectTargetCallback(const PerFoRoControl::SelectTarget msg);
 	void	initTracker();
 	Point	kalmanTracker(Point centroid);
 };
