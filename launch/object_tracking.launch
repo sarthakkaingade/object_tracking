@@ -1,0 +1,7 @@
+<launch>
+    <node pkg="usb_cam" name="ps3_eye" type="usb_cam_node" output="screen">
+      <param name="pixel_format" value="yuyv"/>
+    </node>
+
+    <node pkg="object_tracking" name="object_tracking" type="object_tracking" output="screen"/>
+</launch>
