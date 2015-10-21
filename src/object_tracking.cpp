@@ -20,7 +20,7 @@ ObjectTracking::ObjectTracking() :
 	elemDilate = getStructuringElement( MORPH_ELLIPSE, Size( 2*dilation_size + 1, 2*dilation_size+1 ), Point( dilation_size, dilation_size ) );
 	elemErode = getStructuringElement( MORPH_ELLIPSE, Size( 2*erosion_size + 1, 2*erosion_size+1 ), Point( erosion_size, erosion_size ) );
 
-	IMSHOW = true;
+	IMSHOW = false;
 	trackObject = -1;
 	rectOffset = 5;
 	minDistThresh = 0.1;
@@ -30,7 +30,7 @@ ObjectTracking::ObjectTracking() :
 	mColorRadius = Scalar(20,50,70,0);
 	mUpperBound = Scalar(0);
 	mLowerBound = Scalar(0);
-	cv::namedWindow(OPENCV_WINDOW);
+	//cv::namedWindow(OPENCV_WINDOW);
 }
 
 void ObjectTracking::drawArrow(Mat image, Point p, Point q, Scalar color, int arrowMagnitude=9 , int thickness=2, int line_type=8, int shift=0)
@@ -117,12 +117,12 @@ void ObjectTracking::ImageCallback(const sensor_msgs::ImageConstPtr& msg)
 		ros::requestShutdown();
 	} else if ( key =='z' )	{
 		IMSHOW = true;
-		namedWindow(OPENCV_WINDOW);
-		setMouseCallback(OPENCV_WINDOW, onMouse, NULL); 
+		//namedWindow(OPENCV_WINDOW);
+		//setMouseCallback(OPENCV_WINDOW, onMouse, NULL); 
 	} else if (key == 'x')	{
 		IMSHOW =  false;
 		cvDestroyAllWindows() ;
-		namedWindow(OPENCV_WINDOW);
+		//namedWindow(OPENCV_WINDOW);
 	}
 
 	if (trackObject == -1)	{
