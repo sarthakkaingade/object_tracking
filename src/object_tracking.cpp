@@ -11,10 +11,12 @@ ObjectTracking::ObjectTracking() :
 	image_sub_ = it_.subscribe("/ps3_eye/image_raw", 1, &ObjectTracking::ImageCallback, this);
 	target_sub_ = nh_.subscribe("/SelectTargetPerFoRo", 1, &ObjectTracking::SelectTargetCallback, this);
 	image_pub_ = it_.advertise("/object_tracking/image_raw", 1);
+	navigate_pub_ = nh_.advertise<PerFoRoControl::NavigatePerFoRo>("/NavigatePerFoRo", 1);
 
 	structure_elem = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5));
 	maxDistance = 320 + 240;
-	dilation_size = 1; erosion_size = 1;
+	dilation_size = 1;
+	erosion_size = 1;
 	elemDilate = getStructuringElement( MORPH_ELLIPSE, Size( 2*dilation_size + 1, 2*dilation_size+1 ), Point( dilation_size, dilation_size ) );
 	elemErode = getStructuringElement( MORPH_ELLIPSE, Size( 2*erosion_size + 1, 2*erosion_size+1 ), Point( erosion_size, erosion_size ) );
 
@@ -265,10 +267,15 @@ void ObjectTracking::ImageCallback(const sensor_msgs::ImageConstPtr& msg)
 
 void ObjectTracking::navigate(int x, int y, int rows, int cols)
 {
+	PerFoRoControl::NavigatePerFoRo msg;
 	if (x < (0.3 * cols))	{
-		cout<<"Turn Right"<<endl;
+		//cout<<"Turn Right"<<endl;
+		msg.command = 4;
+		navigate_pub_.publish(msg);
 	} else if (x > (0.7 * cols))	{
-		cout<<"Turn Left"<<endl;
+		//cout<<"Turn Left"<<endl;
+		msg.command = 3;
+		navigate_pub_.publish(msg);
 	}
 }
       

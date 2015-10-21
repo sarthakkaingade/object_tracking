@@ -8,6 +8,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/video/tracking.hpp>
 #include <PerFoRoControl/SelectTarget.h>
+#include <PerFoRoControl/NavigatePerFoRo.h>
 
 using namespace cv;
 using namespace std;
@@ -37,6 +38,7 @@ protected:
 	image_transport::Subscriber image_sub_;
 	image_transport::Publisher image_pub_;
 	ros::Subscriber target_sub_;
+	ros::Publisher navigate_pub_;
 
 	Mat frame;
 	float maxDistance, distPrevCurrent;
