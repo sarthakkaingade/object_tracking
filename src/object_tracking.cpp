@@ -271,12 +271,13 @@ void ObjectTracking::navigate(int x, int y, int rows, int cols)
 	if (x < (0.3 * cols))	{
 		//cout<<"Turn Right"<<endl;
 		msg.command = 4;
-		navigate_pub_.publish(msg);
 	} else if (x > (0.7 * cols))	{
 		//cout<<"Turn Left"<<endl;
 		msg.command = 3;
-		navigate_pub_.publish(msg);
+	} else	{
+		msg.command = 0;
 	}
+	navigate_pub_.publish(msg);
 }
       
 void ObjectTracking::initTracker()
