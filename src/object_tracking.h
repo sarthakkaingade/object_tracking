@@ -59,7 +59,7 @@ protected:
 	KalmanFilter KF;
 	Point kalmanEstimatePt;
 	bool selectObject;
-	int navX, navY;
+	int navX, navY, prevmsg = 1;
 
 	void 	drawArrow(Mat image, Point p, Point q, Scalar color, int arrowMagnitude, int thickness, int line_type, int shift);
 	void	ImageCallback(const sensor_msgs::ImageConstPtr& msg);
