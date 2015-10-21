@@ -6,4 +6,5 @@
 	</node>
 
 	<node pkg="object_tracking" name="object_tracking" type="object_tracking" output="screen"/>
+	<node pkg="web_video_server" name="web_video_server" type="web_video_server" output="screen"/>
 </launch>
