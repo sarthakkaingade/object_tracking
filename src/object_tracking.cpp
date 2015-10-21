@@ -242,9 +242,10 @@ void ObjectTracking::ImageCallback(const sensor_msgs::ImageConstPtr& msg)
 			}  
 			navX = selectCentroid.x;
 			navY = selectCentroid.y;
-			cout<<"X="<<navX<<"Y="<<navY<<endl;		 
+			//cout<<"X="<<navX<<"Y="<<navY<<endl; 
 			missCount = 0;
 			drawArrow(frame, cv::Point(frame.cols/2, frame.rows/2), selectCentroid, Scalar(255,0,0));
+			navigate(navX,navY,cv_ptr->image.rows,cv_ptr->image.cols);
 		} else	{
 			missCount++;
 			navX = 0.0;
@@ -262,7 +263,14 @@ void ObjectTracking::ImageCallback(const sensor_msgs::ImageConstPtr& msg)
 	image_pub_.publish(cv_ptr->toImageMsg());
 }
 
-   
+void ObjectTracking::navigate(int x, int y, int rows, int cols)
+{
+	if (x < (0.3 * cols))	{
+		cout<<"Turn Right"<<endl;
+	} else if (x > (0.7 * cols))	{
+		cout<<"Turn Left"<<endl;
+	}
+}
       
 void ObjectTracking::initTracker()
 {

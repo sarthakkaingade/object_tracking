@@ -63,6 +63,7 @@ protected:
 	void	ImageCallback(const sensor_msgs::ImageConstPtr& msg);
 	void 	SelectTargetCallback(const PerFoRoControl::SelectTarget msg);
 	void	initTracker();
+	void	navigate(int x, int y, int rows, int cols);
 	Point	kalmanTracker(Point centroid);
 };
 
