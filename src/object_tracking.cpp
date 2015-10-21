@@ -275,9 +275,13 @@ void ObjectTracking::navigate(int x, int y, int rows, int cols)
 		//cout<<"Turn Left"<<endl;
 		msg.command = 3;
 	} else	{
+		//cout<<"Center"<<endl;
 		msg.command = 0;
 	}
-	navigate_pub_.publish(msg);
+	if (prevmsg != msg.command)	{
+		prevmsg = msg.command;
+		navigate_pub_.publish(msg);
+	}
 }
       
 void ObjectTracking::initTracker()
